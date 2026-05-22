@@ -34,9 +34,9 @@ function LoginPage() {
       localStorage.setItem('refreshToken', data.refreshToken);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      const role = data.user.role;
-	if (role === 'admin') navigate('/admin/dashboard');
-	else if (role === 'patient') navigate('/portal/dashboard');
+     const role = data.user.roles?.[0];
+	if (role === 'ADMIN') navigate('/admin/dashboard');
+	else if (role === 'PATIENT') navigate('/portal/dashboard');
 	else navigate('/dashboard');
     } catch (err) {
       setError(err.message);
@@ -152,6 +152,15 @@ function LoginPage() {
             </button>
 
           </form>
+		  
+		  <div className="mt-4 text-center">
+			<p className="text-[15px] text-on-surface-variant">
+				Don't have an account?{' '}
+				<Link to="/register" className="text-[14px] font-semibold text-primary hover:text-[#005049] hover:underline transition-colors">
+				Create Account
+				</Link>
+			</p>
+		</div>
 
           {/* HIPAA Notice */}
           <div className="mt-12 pt-5 border-t border-outline-variant/20 text-center flex flex-col items-center gap-1">
