@@ -34,7 +34,10 @@ function LoginPage() {
       localStorage.setItem('refreshToken', data.refreshToken);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      navigate('/dashboard');
+      const role = data.user.role;
+	if (role === 'admin') navigate('/admin/dashboard');
+	else if (role === 'patient') navigate('/portal/dashboard');
+	else navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -43,73 +46,126 @@ function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
-      <section className="w-full max-w-md bg-white border border-gray-200 rounded-xl p-6">
-        <div className="mb-6">
-          <h1 className="text-xl font-semibold text-brand-dark">
-            Dental Clinic
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Sign in to your staff account.
-          </p>
+    <div className="bg-background min-h-screen flex w-full overflow-x-hidden h-screen">
+
+      {/* Left Panel: Branding */}
+      <div className="hidden lg:flex flex-1 flex-col justify-center items-center bg-primary relative overflow-hidden p-12 h-full">
+        <div className="relative z-10 flex flex-col items-center text-center max-w-md">
+          <span className="material-symbols-outlined text-[64px] text-on-primary mb-5" style={{ fontVariationSettings: "'FILL' 1" }}>
+            dentistry
+          </span>
+          <h1 className="text-[32px] font-bold text-on-primary mb-3">DentaCare Pro</h1>
+          <p className="text-[16px] text-primary-fixed-dim">Your dental health, simplified.</p>
+        </div>
+      </div>
+
+      {/* Right Panel: Login Form */}
+      <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12 relative">
+
+        {/* Mobile Logo */}
+        <div className="lg:hidden flex flex-col items-center mb-8">
+          <span className="material-symbols-outlined text-[40px] text-primary mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>
+            dentistry
+          </span>
+          <h1 className="text-[24px] font-semibold text-on-surface">DentaCare Pro</h1>
         </div>
 
-        {error && (
-          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900">
-            {error}
-          </div>
-        )}
+        {/* Card */}
+        <div className="w-full max-w-[430px] bg-surface-container-lowest rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.05)] p-8 flex flex-col">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email
-            </label>
-
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              className="mt-1 w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-[24px] font-semibold text-on-surface mb-1">Welcome Back</h2>
+            <p className="text-[15px] text-on-surface-variant">Sign in to your account</p>
           </div>
 
-          <div>
-            <label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Password
-            </label>
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-600 text-sm text-center">
+              {error}
+            </div>
+          )}
 
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-              className="mt-1 w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+            {/* Email */}
+            <div className="flex flex-col gap-1 clinical-glow rounded transition-all duration-200">
+              <label className="text-[14px] font-semibold text-on-surface" htmlFor="email">
+                Email Address
+              </label>
+              <input
+                className="w-full px-3 py-[10px] border border-outline-variant rounded bg-surface-container-lowest text-on-surface text-[15px] focus:outline-none focus:border-primary focus:border-[2px] transition-all"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="practitioner@clinic.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            {/* Password */}
+            <div className="flex flex-col gap-1 clinical-glow rounded transition-all duration-200">
+              <div className="flex justify-between items-center">
+                <label className="text-[14px] font-semibold text-on-surface" htmlFor="password">
+                  Password
+                </label>
+                <a className="text-[12px] text-primary hover:text-tertiary transition-colors" href="#">
+                  Forgot Password?
+                </a>
+              </div>
+              <input
+                className="w-full px-3 py-[10px] border border-outline-variant rounded bg-surface-container-lowest text-on-surface text-[15px] focus:outline-none focus:border-primary focus:border-[2px] transition-all"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            {/* Remember Me */}
+            <div className="flex items-start gap-3 mt-1">
+              <input
+                className="w-4 h-4 rounded border-outline-variant text-primary cursor-pointer mt-[2px]"
+                id="remember"
+                name="remember"
+                type="checkbox"
+              />
+              <label className="text-[15px] text-on-surface-variant cursor-pointer" htmlFor="remember">
+                Remember me on this device
+              </label>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary text-on-primary py-[12px] rounded-lg text-[14px] font-semibold mt-3 hover:bg-[#005049] transition-colors duration-200 shadow-sm flex justify-center items-center gap-2 disabled:opacity-60"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+              {!loading && <span className="material-symbols-outlined text-[20px]">arrow_forward</span>}
+            </button>
+
+          </form>
+
+          {/* HIPAA Notice */}
+          <div className="mt-12 pt-5 border-t border-outline-variant/20 text-center flex flex-col items-center gap-1">
+            <span className="material-symbols-outlined text-tertiary" style={{ fontSize: '20px' }}>
+              health_and_safety
+            </span>
+            <p className="text-[12px] text-on-surface-variant max-w-[280px]">
+              This is a secure, HIPAA-compliant portal. Unauthorized access is strictly prohibited and monitored.
+            </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-gray-500">
-          Don&apos;t have an account?{' '}
-          <Link to="/register" className="font-semibold text-primary hover:text-primary-dark">
-            Register
-          </Link>
-        </p>
-      </section>
-    </main>
+        </div>
+      </div>
+    </div>
   );
 }
 
