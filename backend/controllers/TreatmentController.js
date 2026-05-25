@@ -5,7 +5,10 @@ const treatmentController = {
   getAll: async (req, res) => {
     try {
       const treatments = await Treatment.findAll({
-        where: { is_active: true },
+        where: { 
+            status: 'Active',
+            is_deleted: false
+          },
         order: [['treatment_id', 'DESC']]
       });
 
@@ -28,7 +31,8 @@ const treatmentController = {
       const treatment = await Treatment.findOne({
         where: {
           treatment_id: id,
-          is_active: true
+          status: 'Active',
+          is_deleted: false
         }
       });
 
@@ -52,15 +56,16 @@ const treatmentController = {
 
   create: async (req, res) => {
     try {
-      const { treatment_name, description, cost, average_duration } = req.body;
+      const { treatment_name, description, average_duration } = req.body;
+      const price = req.body.price ?? req.body.cost;
 
-      if (!treatment_name || cost === undefined || cost === null) {
+      if (!treatment_name || price === undefined || price === null) {
         return res.status(400).json({
           message: 'treatment_name dhe cost janë të detyrueshme.'
         });
       }
 
-      if (parseFloat(cost) < 0) {
+      if (parseFloat(price) < 0) {
         return res.status(400).json({
           message: 'cost nuk mund të jetë numër negativ.'
         });
@@ -74,9 +79,10 @@ const treatmentController = {
 
       const existingTreatment = await Treatment.findOne({
         where: {
-          treatment_name,
-          is_active: true
-        }
+            treatment_name,
+            status: 'Active',
+            is_deleted: false
+          }
       });
 
       if (existingTreatment) {
@@ -86,12 +92,13 @@ const treatmentController = {
       }
 
       const newTreatment = await Treatment.create({
-        treatment_name,
-        description: description || null,
-        cost,
-        average_duration: average_duration || null,
-        is_active: true
-      });
+          treatment_name,
+          description: description || null,
+          price,
+          average_duration: average_duration || null,
+          status: 'Active',
+          is_deleted: false
+        });
 
       return res.status(201).json({
         message: 'Trajtimi u krijua me sukses.',
@@ -108,13 +115,15 @@ const treatmentController = {
   update: async (req, res) => {
     try {
       const { id } = req.params;
-      const { treatment_name, description, cost, average_duration } = req.body;
+      const { treatment_name, description, average_duration } = req.body;
+      const price = req.body.price ?? req.body.cost;
 
       const treatment = await Treatment.findOne({
         where: {
-          treatment_id: id,
-          is_active: true
-        }
+            treatment_id: id,
+            status: 'Active',
+            is_deleted: false
+          }
       });
 
       if (!treatment) {
@@ -123,7 +132,7 @@ const treatmentController = {
         });
       }
 
-      if (cost !== undefined && cost !== null && parseFloat(cost) < 0) {
+      if (price !== undefined && price !== null && parseFloat(price) < 0) {
         return res.status(400).json({
           message: 'cost nuk mund të jetë numër negativ.'
         });
@@ -140,7 +149,8 @@ const treatmentController = {
           where: {
             treatment_name,
             treatment_id: { [Op.ne]: id },
-            is_active: true
+            status: 'Active',
+            is_deleted: false
           }
         });
 
@@ -154,7 +164,7 @@ const treatmentController = {
       const updateData = {};
       if (treatment_name) updateData.treatment_name = treatment_name;
       if (description !== undefined) updateData.description = description;
-      if (cost !== undefined && cost !== null) updateData.cost = cost;
+      if (price !== undefined && price !== null) updateData.price = price;
       if (average_duration !== undefined) updateData.average_duration = average_duration;
 
       await treatment.update(updateData);
@@ -178,7 +188,8 @@ const treatmentController = {
       const treatment = await Treatment.findOne({
         where: {
           treatment_id: id,
-          is_active: true
+          status: 'Active',
+          is_deleted: false
         }
       });
 
@@ -189,7 +200,8 @@ const treatmentController = {
       }
 
       await treatment.update({
-        is_active: false
+        status: 'Inactive',
+        is_deleted: true
       });
 
       return res.status(200).json({

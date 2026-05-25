@@ -2,14 +2,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', path: '/admin/dashboard' },
-  { icon: 'calendar_month', label: 'Appointments', path: '#' },
-  { icon: 'groups', label: 'Patients', path: '#' },
-  { icon: 'folder_shared', label: 'Dental Records', path: '#' },
-  { icon: 'medical_services', label: 'Treatments', path: '#' },
-  { icon: 'inventory_2', label: 'Inventory', path: '#' },
-  { icon: 'receipt_long', label: 'Billing & Invoices', path: '#' },
-  { icon: 'medical_information', label: 'Dentists', path: '#' },
-  { icon: 'notifications_active', label: 'Reminders', path: '#' },
+  { icon: 'calendar_month', label: 'Appointments', path: '/admin/appointments' },
+  { icon: 'groups', label: 'Patients', path: '/admin/patients' },
+  { icon: 'folder_shared', label: 'Dental Records', path: '/admin/dental-records' },
+  { icon: 'medical_services', label: 'Treatments', path: '/admin/treatments' },
+  { icon: 'inventory_2', label: 'Inventory', path: '/admin/inventory' },
+  { icon: 'receipt_long', label: 'Billing & Invoices', path: '/admin/billing' },
+  { icon: 'medical_information', label: 'Dentists', path: '/admin/dentists' },
+  { icon: 'notifications_active', label: 'Reminders', path: '/admin/reminders' },
 ];
 
 const adminItems = [
@@ -60,7 +60,7 @@ function AdminSidebar() {
         <div className="pt-4 pb-2">
           <p className="px-4 text-[12px] text-outline mb-2 uppercase tracking-wider">Administration</p>
           {adminItems.map((item) => {
-  const path = item.label === 'User Management' ? '/admin/users' : '#';
+  const path = item.label === 'User Management' ? '/admin/users' : '/admin/settings';
   const isActive = location.pathname === path;
   return (
     <a

@@ -4,7 +4,8 @@ const {
   sequelize,
   User,
   Role,
-  RefreshToken
+  RefreshToken,
+  Patient
 } = require('../models');
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -246,6 +247,16 @@ const userController = {
           return res.status(400).json({
             message: 'Roli i specifikuar nuk ekziston.'
           });
+        }
+        
+        if (role_id !== user.role_id) {
+          const oldRole = await Role.findByPk(user.role_id, { transaction });
+          if (oldRole && oldRole.normalized_name === 'PATIENT' && role.normalized_name !== 'PATIENT') {
+            await Patient.update(
+              { is_deleted: true, status: 'Inactive' },
+              { where: { user_id: id }, transaction }
+            );
+          }
         }
       }
 

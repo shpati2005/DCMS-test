@@ -6,6 +6,15 @@ import AdminDashboard from './pages/AdminDashboard';
 import PatientPortal from './pages/PatientPortal';
 import PrivateRoute from './components/PrivateRoute';
 import UserManagement from './pages/UserManagement';
+import AppointmentsManagement from './pages/AppointmentsManagement';
+import PatientsManagement from './pages/PatientsManagement';
+import InventoryManagement from './pages/InventoryManagement';
+import BillingInvoices from './pages/BillingInvoices';
+import DentistsManagement from './pages/DentistsManagement';
+import DentalRecordsManagement from './pages/DentalRecordsManagement';
+import TreatmentsManagement from './pages/TreatmentsManagement';
+import RemindersPage from './pages/RemindersPage';
+import SystemSettings from './pages/SystemSettings';
 
 
 function App() {
@@ -39,6 +48,78 @@ function App() {
 			</PrivateRoute>
 		}
 		/>
+        <Route
+          path="/admin/appointments"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST']}>
+              <AppointmentsManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/patients"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST']}>
+              <PatientsManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/inventory"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST']}>
+              <InventoryManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/billing"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST']}>
+              <BillingInvoices />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/dentists"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST']}>
+              <DentistsManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/dental-records"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST', 'DENTIST']}>
+              <DentalRecordsManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/reminders"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST']}>
+              <RemindersPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN']}>
+              <SystemSettings />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/treatments"
+          element={
+            <PrivateRoute allowedRoles={['ADMIN', 'RECEPTIONIST', 'DENTIST']}>
+              <TreatmentsManagement />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/portal/dashboard"
           element={
